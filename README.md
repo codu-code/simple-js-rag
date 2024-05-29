@@ -1,4 +1,4 @@
-# Simple Rag Demo
+# Simple RAG Demo
 
 This code is to supplement a talk given by [Niall Maher](https://x.com/nialljoemaher).
 
