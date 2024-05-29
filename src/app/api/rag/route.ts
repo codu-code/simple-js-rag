@@ -1,5 +1,5 @@
-import fs from "node:fs/promises";
-import { Document, VectorStoreIndex, OpenAI, Settings } from "llamaindex";
+import { VectorStoreIndex, OpenAI, Settings } from "llamaindex";
+import { LlamaParseReader } from "llamaindex/readers/LlamaParseReader";
 
 Settings.llm = new OpenAI({ model: "gpt-3.5-turbo" });
 
@@ -10,15 +10,14 @@ export async function POST(request: Request) {
       throw new Error("Input is required");
     }
 
-    // Load essay from abramov.txt in Node
-    const path = "./node_modules/llamaindex/examples/abramov.txt";
+    const reader = new LlamaParseReader({ resultType: "markdown" });
 
-    const essay = await fs.readFile(path, "utf-8");
-    // // Create Document object with essay
-    const document = new Document({ text: essay, id_: path });
+    const documents = await reader.loadData(
+      "./src/data/writing-effectively.pdf"
+    );
 
     // Split text and create embeddings. Store them in a VectorStoreIndex
-    const index = await VectorStoreIndex.fromDocuments([document]);
+    const index = await VectorStoreIndex.fromDocuments(documents);
 
     // Query engine convenience function
     // This convenience function combines several components:
